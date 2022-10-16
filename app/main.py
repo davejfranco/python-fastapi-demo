@@ -1,17 +1,14 @@
-from .db import models, database
 from lib2to3.pytree import Base
 from fastapi import FastAPI, HTTPException, status
 
-
-stores = database.generate_store_db()
-products = database.generate_product_db()
-inventory = database.generate_inventory_db()
+from .db import models
+from .api import api
 
 app = FastAPI()
 
 @app.get("/stores")
 def get_stores():
-    return stores
+    return api.all_stores()
 
 @app.get("/stores/{store}")
 def get_store(store: str):
@@ -27,7 +24,7 @@ def delete_store(store: str):
 
 @app.get("/products")
 def get_products():
-    return products
+    return api.all_products()
 
 @app.get("/products/{product}")
 def get_products(product: str):

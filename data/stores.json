@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "name": "My Awesome Store",
+        "Address": "4343 Coplin Avenue"
+    },
+    {
+        "id": 2,
+        "name": "My Super Awesome Store",
+        "Address": "2064 Ingram Street"
+    },
+    {
+        "id": 3,
+        "name": "My Ultra Awesome Store",
+        "Address": "1450 Irving Place"
+    },
+    {
+        "id": 4,
+        "name": "My Mega Awesome Store",
+        "Address": "767 Cherry Ridge Drive"
+    },
+    {
+        "id": 5,
+        "name": "My Hyper Awesome Store",
+        "Address": "2316 Tenmile"
+    }
+]

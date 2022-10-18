@@ -1,4 +1,4 @@
-name: PR checks
+name: CI
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
 
       - name: Determine Docker image tag
         run: |
-          IMAGE_TAG="${{ steps.branch-name.outputs.current_branch }}"_${{ github.sha }}"
+          IMAGE_TAG="${{ steps.branch-name.outputs.current_branch }}_${{ github.sha }}"
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
         
       - name: docker build 

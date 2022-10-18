@@ -38,8 +38,11 @@ jobs:
       - name: docker login
         run: |
           docker login \
-            --username ${{ secrets.DOCKER_USERNAME }}
-            --password-stdin ${{ secrets.DOCKER_PASSWORD }}
+            --username "${{ secrets.DOCKER_USERNAME }}"
+            --password-stdin "${{ secrets.DOCKER_PASSWORD }}"
       
+      - name: docker push 
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/python-fast-api:$IMAGE_TAG
 
       

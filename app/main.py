@@ -1,5 +1,6 @@
-#from lib2to3.pytree import Base
-from curses.ascii import HT
+"""
+This is the main entrypoint
+"""
 from fastapi import FastAPI, HTTPException
 
 from .db import models
@@ -10,41 +11,33 @@ app = FastAPI()
 #Stores
 @app.get("/stores")
 def get_stores():
+    """Return all the stores in the DB"""
     return api.all_stores()
 
 @app.get("/stores/{id}")
-def get_store(id: int):
-    req = api.store_by_id(id)
+def get_store(store_id: int):
+    """Return the store by its ID"""
+    req = api.store_by_id(store_id)
     if req != {}:
         return req
     raise HTTPException(status_code=404, detail="Store not found")
 
 @app.post("/stores", status_code=201)
 def add_store(store: models.Store):
+    """Add a store to the DB"""
     try:
         api.add_new_store(store)
     except Exception as err:
-        raise HTTPException(status_code=422, detail=err)
+        raise HTTPException(status_code=422, detail=err) from None
 
 
 @app.delete("/stores/{id}", status_code=201)
-def delete_store(id: int):
+def delete_store(store_id: int):
+    """Delete store from the DB"""
     try:
-        api.delete_store(id)
+        api.delete_store(store_id)
     except IndexError:
-        raise HTTPException(status_code=404, detail="store not found")
+        raise HTTPException(status_code=404, detail="store not found") from None
     except Exception as err:
-        raise HTTPException(status_code=422, detail=err)
-  
-
-@app.get("/products")
-def get_products():
-    return api.all_products()
-
-@app.get("/products/{product}")
-def get_products(product: str):
-    return
-
-@app.get("/products")
-def get_products(product: str):
-    return
+        raise HTTPException(status_code=422, detail=err) from None
+        

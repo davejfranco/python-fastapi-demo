@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-        
+
       - name: Lint with pylint
         run: |
           pip install pylint
@@ -23,6 +23,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
           allow-repeats: false 
+      
       - name: Install dependencies
         run: |
           pip3 install -r requirements.txt

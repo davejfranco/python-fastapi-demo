@@ -9,7 +9,20 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+        
+      - name: Lint with pylint
+        run: |
+          pip install pylint
+          OUTPUT=$(pylint app/ --exit-zero)
+          echo "MESSAGE=$OUTPUT" >> $GITHUB_ENV
       
+      - name: Post result to PR
+        uses: mshick/add-pr-comment@v1
+        with:
+          message: ${{ env.MESSAGE }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]'
+          allow-repeats: false 
       - name: Install dependencies
         run: |
           pip3 install -r requirements.txt
@@ -17,7 +30,3 @@ jobs:
       - name: Run unittests
         run: |
           pytest test/test.py
-      
-      - name: Security vulnerabilities scan
-        uses: aufdenpunkt/python-safety-check@v1.0.5
-      

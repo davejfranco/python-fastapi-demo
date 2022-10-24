@@ -14,7 +14,7 @@ def get_stores():
     """Return all the stores in the DB"""
     return api.all_stores()
 
-@app.get("/stores/{id}")
+@app.get("/stores/{store_id}")
 def get_store(store_id: int):
     """Return the store by its ID"""
     req = api.store_by_id(store_id)
@@ -31,7 +31,7 @@ def add_store(store: models.Store):
         raise HTTPException(status_code=422, detail=err) from None
 
 
-@app.delete("/stores/{id}", status_code=201)
+@app.delete("/stores/{store_id}", status_code=201)
 def delete_store(store_id: int):
     """Delete store from the DB"""
     try:
@@ -40,4 +40,3 @@ def delete_store(store_id: int):
         raise HTTPException(status_code=404, detail="store not found") from None
     except Exception as err:
         raise HTTPException(status_code=422, detail=err) from None
-        

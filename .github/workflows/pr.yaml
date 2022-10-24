@@ -13,19 +13,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip3 install -r requirements.txt
-
-      - name: Lint with pylint
-        run: |
-          OUTPUT=$(pylint app/ --exit-zero)
-          echo "MESSAGE=$OUTPUT" >> $GITHUB_ENV
-      
-      - name: Post result to PR
-        uses: mshick/add-pr-comment@v1
-        with:
-          message: ${{ env.MESSAGE }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          repo-token-user-login: 'github-actions[bot]'
-          allow-repeats: false 
       
       - name: Run unittests
         run: |

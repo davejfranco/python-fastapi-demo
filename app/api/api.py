@@ -1,5 +1,3 @@
-from hashlib import new
-from operator import ne
 from app.db import database, models
 
 stores =  sorted(database.generate_store_db(), key=lambda d: d['id']) #always return sorted by id

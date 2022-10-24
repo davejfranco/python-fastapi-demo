@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check out code
+        uses: actions/checkout@v2
+      
+      - name: Install dependencies
+        run: |
+          pip3 install -r requirements.txt
+      
+      - name: Run unittests
+        run: |
+          pytest test/test.py 
+      
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v6
+
+      - name: Determine Docker image tag
+        run: |
+          IMAGE_TAG="${{ steps.branch-name.outputs.current_branch }}_${{ github.sha }}"
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+        
+      - name: docker build 
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/python-fast-api:$IMAGE_TAG .
+
+      - name: docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: docker push 
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/python-fast-api:$IMAGE_TAG
+
+      

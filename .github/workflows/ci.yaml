@@ -28,6 +28,8 @@ jobs:
         run: |
           IMAGE_TAG="${{ steps.branch-name.outputs.current_branch }}_${{ github.sha }}"
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
+          echo "::set-output name=image_tag::${IMAGE_TAG}"
         
       - name: docker build 
         run: |
@@ -49,4 +51,4 @@ jobs:
       
       - name: Test envar
         run: |
-          echo $IMAGE_TAG
+          echo "${{ needs.CI.outputs.image_tag }}"

@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  CI:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -44,11 +44,10 @@ jobs:
       - name: docker push 
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/python-fast-api:$IMAGE_TAG
-  CD:
+  cd:
     runs-on: ubuntu-latest
-    needs: CI
-    steps:
-      
+    needs: ci
+    steps:    
       - name: Test envar
         run: |
-          echo "${{ needs.CI.outputs.image_tag }}"
+          echo "${{ secrets.DOCKER_USERNAME }}/python-fast-api:${{ needs.ci.outputs.image_tag }}"

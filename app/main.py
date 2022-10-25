@@ -6,7 +6,14 @@ from fastapi import FastAPI, HTTPException
 from .db import models
 from .api import api
 
+VERSION=0.1
 app = FastAPI()
+
+
+@app.get("/status", status_code=200)
+def get_stores():
+    """Return status"""
+    return {"status":"healthy", "version":VERSION}
 
 #Stores
 @app.get("/stores")

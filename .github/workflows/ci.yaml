@@ -75,5 +75,7 @@ jobs:
             fi
             sleep 1
             echo "Starting service with new version..."
-            docker run --name api -d -p 80:8080 $DOCKER:$TAG
+            echo $DOCKER_IMAGE
+            echo $TAG
+            docker run --name api -d -p 80:8080 $DOCKER_IMAGE:$TAG
             echo "Service has started"

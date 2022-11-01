@@ -59,11 +59,16 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            #!/bin/bash
             echo "Stopping Service..."
             sleep 1
             API=$(docker ps -q -f name=api )
-            docker stop $API
-            echo "Service stopped..."
+            if [ ! -z $API ]
+            then
+              docker stop $API
+              docker rm $$API
+              echo "Service stopped..."
+            fi
             sleep 1
             echo "Starting service with new version..."
             docker run --name api -d -p 80:8080 ${{ secrets.DOCKER_USERNAME }}/python-fast-api:${{ needs.ci.outputs.image_tag }}"

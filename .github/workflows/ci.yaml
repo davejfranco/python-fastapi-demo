@@ -54,10 +54,14 @@ jobs:
       
       - name: deploy DEMO API
         uses: appleboy/ssh-action@v0.1.4
+        env:
+          DOCKER_IMAGE: "${{ secrets.DOCKER_USERNAME }}/python-fast-api"
+          TAG: ${{ needs.ci.outputs.image_tag }}
         with:
           host: ${{ secrets.SERVERS }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
+          envs: DOCKER_IMAGE, TAG
           script: |
             #!/bin/bash
             echo "Stopping Service..."
@@ -71,5 +75,5 @@ jobs:
             fi
             sleep 1
             echo "Starting service with new version..."
-            docker run --name api -d -p 80:8080 ${{ secrets.DOCKER_USERNAME }}/python-fast-api:${{ needs.ci.outputs.image_tag }}"
+            docker run --name api -d -p 80:8080 $DOCKER:$TAG
             echo "Service has started"

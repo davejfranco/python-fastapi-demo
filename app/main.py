@@ -6,7 +6,7 @@ from fastapi import FastAPI, HTTPException, status
 from .db import models
 from .api import api
 
-VERSION=0.1
+VERSION=0.2
 app = FastAPI()
 
 

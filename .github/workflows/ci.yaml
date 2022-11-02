@@ -79,3 +79,25 @@ jobs:
             echo $TAG
             docker run --name api -d -p 80:8080 $DOCKER_IMAGE:$TAG
             echo "Service has started"
+      
+      - name: Verify Deployment 
+        run: |
+          #!/bin/bash
+          SERVER=${{ secrets.API_ENDPOINT }}
+          RESPONSE=$(curl --write-out '%{http_code}' --silent --output /dev/null ${SERVER})
+          if [ $RESPONSE -ne "200" ]
+          then
+              echo "Service Unavailable"
+              exit 1
+          fi
+          echo "Service is Healthy"
+          exit 0
+      
+      - name: Notify Successful
+        run: |
+          echo "Success!"
+      
+      - name: Notify Fail
+        if: ${{ failure() }}
+        run: |
+          echo "The deployment has failed!"

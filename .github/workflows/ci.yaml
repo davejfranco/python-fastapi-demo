@@ -83,7 +83,7 @@ jobs:
       - name: Verify Deployment 
         run: |
           #!/bin/bash
-          SERVER=${{ secrets.API_ENDPOINT }}
+          SERVER=http://150.136.205.232
           RESPONSE=$(curl --write-out '%{http_code}' --silent --output /dev/null ${SERVER})
           if [ $RESPONSE -ne "200" ]
           then

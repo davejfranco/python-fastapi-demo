@@ -81,9 +81,10 @@ jobs:
             echo "Service has started"
       
       - name: Verify Deployment 
+        env:
+          SERVER: ${{ secrets.API_ENDPOINT }}
         run: |
           #!/bin/bash
-          SERVER=http://150.136.205.232
           RESPONSE=$(curl --write-out '%{http_code}' --silent --output /dev/null ${SERVER})
           if [ $RESPONSE -ne "200" ]
           then

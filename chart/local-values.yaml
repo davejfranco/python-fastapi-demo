@@ -46,17 +46,15 @@ ingress:
   className: ""
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /
   hosts:
-    - host: python-fastapi-demo.local
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: python-fastapi-demo
-              port:
-                number: 80
+    - paths:
+      - path: /app
+        pathType: Prefix
+        backend:
+          service:
+            name: python-fastapi-demo
+            port:
+              number: 80
   
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

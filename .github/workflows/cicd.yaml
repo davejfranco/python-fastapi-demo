@@ -32,7 +32,7 @@ jobs:
 
       - name: docker build 
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/python-fast-api:${{ steps.image.outputs.tag }} .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/python-fast-api:${{ github.sha }} .
 
       - name: docker login
         uses: docker/login-action@v2
@@ -52,48 +52,31 @@ jobs:
     needs: ci
     steps:    
       
-      - name: deploy DEMO API
-        uses: appleboy/ssh-action@v0.1.4
-        env:
-          DOCKER_IMAGE: "${{ secrets.DOCKER_USERNAME }}/python-fast-api"
-          TAG: ${{ needs.ci.outputs.image_tag }}
+      - name: Check out code
+        uses: actions/checkout@v2
+     
+      - name: Authenticate in AWS
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          host: ${{ secrets.SERVERS }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          envs: DOCKER_IMAGE, TAG
-          script: |
-            #!/bin/bash
-            echo "Stopping Service..."
-            sleep 1
-            API=$(docker ps -q -f name=api )
-            if [ ! -z $API ]
-            then
-              docker stop $API
-              docker rm $API
-              echo "Service stopped..."
-            fi
-            sleep 1
-            echo "Starting service with new version..."
-            echo $DOCKER_IMAGE
-            echo $TAG
-            docker run --name api -d -p 80:8080 $DOCKER_IMAGE:$TAG
-            echo "Service has started"
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
+          role-duration-seconds: 1200
+          role-session-name: GHA-${{ github.sha }}
+          aws-region: ${{ secrets.AWS_REGION }}
       
-      - name: Verify Deployment 
-        env:
-          SERVER: ${{ secrets.API_ENDPOINT }}
+      - name: Upgrade Helm Chart with latest image tag
         run: |
-          #!/bin/bash
-          RESPONSE=$(curl --write-out '%{http_code}' --silent --output /dev/null ${SERVER})
-          if [ $RESPONSE -ne "200" ]
-          then
-              echo "Service Unavailable"
-              exit 1
-          fi
-          echo "Service is Healthy"
-          exit 0
-      
+          aws eks update-kubeconfig --name $CLUSTER_NAME
+          
+          helm upgrade \
+            python-fastapi chart/ \
+            --install --wait \
+            --values eks-values.yaml \
+            --set image.tag=${{ needs.ci.outputs.image_tag }} \
+            --namespace $NAMESPACE
+        env:
+          CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
+          NAMESPACE: ${{ secrets.NAMESPACE }}
+
       - name: Notify Successful
         run: |
           echo "Success!"

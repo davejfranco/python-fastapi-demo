@@ -19,16 +19,6 @@ jobs:
       - name: Run unittests
         run: |
           pytest test/test.py 
-      
-      - name: Get branch name
-        id: branch-name
-        uses: tj-actions/branch-names@v6
-
-      - name: Determine Docker image tag
-        id: image
-        run: |
-          IMAGE_TAG="${{ steps.branch-name.outputs.current_branch }}_${{ github.sha }}"
-          echo "tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: docker build 
         run: |
@@ -42,10 +32,10 @@ jobs:
       
       - name: docker push 
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/python-fast-api:${{ steps.image.outputs.tag }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/python-fast-api:${{ github.sha }}
       
     outputs:
-        image_tag: ${{ steps.image.outputs.tag }}
+        image_tag: ${{ github.sha }}
 
   cd:
     runs-on: ubuntu-latest

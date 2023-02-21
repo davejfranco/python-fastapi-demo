@@ -1,4 +1,4 @@
-name: CI
+name: CICD
 
 on:
   push:
@@ -64,7 +64,7 @@ jobs:
           helm upgrade \
             python-fastapi chart/ \
             --install --wait \
-            --values eks-values.yaml \
+            --values chart/eks-values.yaml \
             --set image.tag=${{ needs.ci.outputs.image_tag }} \
             --namespace $NAMESPACE
         env:

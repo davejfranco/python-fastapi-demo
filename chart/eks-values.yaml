@@ -42,11 +42,20 @@ service:
   port: 80
 
 ingress:
-  enabled: disabled
+  enabled: true
   className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts: 
+    - host: python-fastapi-demo.local
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: python-fastapi-demo
+            port:
+              number: 8081
 
   tls: []
   #  - secretName: chart-example-tls

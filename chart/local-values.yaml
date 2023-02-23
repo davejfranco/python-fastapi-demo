@@ -42,20 +42,20 @@ service:
   port: 80
 
 ingress:
-  enabled: true
+  enabled: false
   className: ""
   annotations:
     kubernetes.io/ingress.class: nginx
-  hosts:
-    - paths:
-      - path: /app
+  hosts: 
+    - host: python-fastapi-demo.local
+      paths:
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: python-fastapi-demo
             port:
-              number: 80
-  
+              number: 8081
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little

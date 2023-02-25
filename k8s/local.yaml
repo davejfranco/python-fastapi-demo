@@ -1,0 +1,46 @@
+#Write deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-fastapi-deployment
+  namespace: app
+  labels:
+    app: fastapi-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-demo
+  template:
+    metadata:
+      labels:
+        app: fastapi-demo
+    spec:
+      containers:
+      - name: api
+        image: davejfranco/python-fastapi-demo
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        ports:
+        - containerPort: 8080
+---
+#ClusterIP service
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-fastapi-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: fastapi-demo
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+    

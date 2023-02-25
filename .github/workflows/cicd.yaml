@@ -56,7 +56,7 @@ jobs:
       
       - name: update deployment
         run: |
-          eks update-kubeconfig --name ${{ secrets.CLUSTER_NAME }} --region us-east-1
+          aws eks update-kubeconfig --name ${{ secrets.CLUSTER_NAME }} --region us-east-1
           kubectl set image deployment/python-fastapi-deployment api=davejfranco/python-fastapi-demo:${{ needs.ci.outputs.image }} -n app
         
   

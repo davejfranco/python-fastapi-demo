@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: python-fastapi-deployment
+  name: fastapi-demo
   namespace: app
   labels:
     app: fastapi-demo
@@ -16,9 +16,11 @@ spec:
       labels:
         app: fastapi-demo
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
       - name: api
-        image: davejfranco/python-fastapi-demo
+        image: davejfranco/fastapi-demo:latest 
         resources:
           limits:
             cpu: 100m
@@ -33,7 +35,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: python-fastapi-service
+  name: fastapi-demo
   namespace: app
 spec:
   type: ClusterIP
